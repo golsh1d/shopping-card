@@ -3,6 +3,10 @@ import React, { Component } from 'react'
 import { MdAddShoppingCart } from "react-icons/md";
 
 export default class ProductCard extends Component {
+  clickHandler(id) {
+    this.props.onClick(id)
+  }
+  
   render() {
     let {id , img , title , price} = this.props
     return (
@@ -14,7 +18,7 @@ export default class ProductCard extends Component {
         <div className='ProductCard-details'>
             <div className='ProductCard-title'>{title}</div>
             <div className='ProductCard-price'>{price}$</div>
-            <button className='ProductCard-btn'>
+            <button className='ProductCard-btn' onClick={this.clickHandler.bind(this , id)}>
                 <span>Add To Card</span>
                 <MdAddShoppingCart />
             </button>
