@@ -1,0 +1,11 @@
+.Header-wrapper {
+    width: 100%;
+    height: min-content;
+    padding: 20px 0;
+    text-align: center;
+    font-family: 'poppins';
+    font-size: 40px;
+    font-weight: 600;
+    background-color: #C1CFA1;
+    color: #fff;
+}
