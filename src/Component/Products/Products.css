@@ -1,0 +1,104 @@
+.Products-wrapper {
+    width: 90%;
+    margin: 0 auto;
+    padding: 20px 0;
+    font-family: 'poppins';
+}
+
+.Products-selecting-wrapper {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.Products-selecting-wrapper select {
+    width: 170px;
+    height: 35px;
+    border: none;
+    outline: none;
+    background-color: #A5B68D;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    font-family: 'poppins';
+}
+
+.Products-selecting-wrapper select option {
+    background-color: #fff;
+    color: #000;
+}
+
+.Products-search-input-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #A5B68D;
+    width: 170px;
+    height: 35px;
+    border-radius: 5px;
+}
+
+.Products-search-input-wrapper input {
+    width: 145px;
+    height: 100%;
+    border: none;
+    outline: none;
+    font-family: 'poppins';
+}
+
+.Products-search-icon {
+    cursor: pointer;
+}
+
+.Products-cards-wrapper {
+    display: grid;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.Shopping-card-title {
+    width: 100%;
+    height: min-content;
+    padding: 20px 0;
+    border-radius: 10px 10px 0 0;
+    text-align: center;
+    font-family: 'poppins';
+    font-size: 20px;
+    font-weight: 600;
+    background-color: #C1CFA1;
+    color: #fff;
+}
+
+.Shopping-card-total-price {
+    width: 100%;
+    text-align: right;
+    margin-top: 20px;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+@media screen and (max-width : 500px) {
+    .Products-cards-wrapper-col-max-500{
+        grid-template-columns: 1fr;
+    }
+}
+
+@media screen and (min-width : 500px) {
+    .Products-cards-wrapper-col-min-500{
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media screen and (min-width : 768px) {
+    .Products-cards-wrapper-col-min-768{
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}
+
+@media screen and (min-width : 1280px) {
+    .Products-cards-wrapper-col-min-1280{
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+}
