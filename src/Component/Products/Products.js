@@ -1,235 +1,176 @@
 import './Products.css'
-import React, { Component } from 'react'
+import React , {useEffect, useState} from 'react'
 import { CiSearch } from "react-icons/ci";
 import ProductCard from './ProductCard';
 import ShoppingCardProduct from './ShoppingCardProduct';
 
-export default class Products extends Component {
-  constructor(props) {
-    super(props)
+export default function Products () {
 
-    this.state = {
-        productsData : [
-            {id : 1 , img : "./image/iphone13.webp" , title : "Iphone 13" , price : 1200, count: 1 , popularity : 2 , selling : 3} ,
-            {id : 2 , img : "./image/iphone13pro.webp" , title : "Iphone 13 Pro Max" , price : 2000, count: 1 , popularity : 4 , selling : 5} ,
-            {id : 3 , img : "./image/iphone16.webp" , title : "Iphone 16" , price : 2500, count: 1 , popularity : 1 , selling : 4} ,
-            {id : 4 , img : "./image/iphone16pro.webp" , title : "Iphone 16 Pro Max" , price : 3500, count: 1 , popularity : 3 , selling : 6} ,
-            {id : 5 , img : "./image/s23fe.webp" , title : "Samsung S23 FE" , price : 500, count: 1 , popularity : 5 , selling : 1} ,
-            {id : 6 , img : "./image/s23ultra.webp" , title : "Samsung S23 Ultra" , price : 1000, count: 1 , popularity : 6 , selling : 2} ,
-        ] ,
-        searchInput : "" ,
-        searchedProduct : [] ,
-        shoppingCardProducts : [] ,
-        sum : 0 ,
-    }
+  const [productsData , setProductsData] = useState([
+    {id : 1 , img : "./image/iphone13.webp" , title : "Iphone 13" , price : 1200, count: 1 , popularity : 2 , selling : 3} ,
+    {id : 2 , img : "./image/iphone13pro.webp" , title : "Iphone 13 Pro Max" , price : 2000, count: 1 , popularity : 4 , selling : 5} ,
+    {id : 3 , img : "./image/iphone16.webp" , title : "Iphone 16" , price : 2500, count: 1 , popularity : 1 , selling : 4} ,
+    {id : 4 , img : "./image/iphone16pro.webp" , title : "Iphone 16 Pro Max" , price : 3500, count: 1 , popularity : 3 , selling : 6} ,
+    {id : 5 , img : "./image/s23fe.webp" , title : "Samsung S23 FE" , price : 500, count: 1 , popularity : 5 , selling : 1} ,
+    {id : 6 , img : "./image/s23ultra.webp" , title : "Samsung S23 Ultra" , price : 1000, count: 1 , popularity : 6 , selling : 2} ,
+  ])
+  const [searchInput , setSearchInput] = useState("")
+  const [searchedProduct , setSearchedProduct] = useState([])
+  const [shoppingCardProducts , setShoppingCardProducts] = useState([])
+  const [sum , setSum] = useState(0)
 
-    this.changeSelectHandler = this.changeSelectHandler.bind(this)
-    this.changeInputHandler = this.changeInputHandler.bind(this)
-    this.searchHandler = this.searchHandler.bind(this)
-    this.keyDownInputHandler = this.keyDownInputHandler.bind(this)
-    this.addToCardHandler = this.addToCardHandler.bind(this)
-    this.removeProductHandler = this.removeProductHandler.bind(this)
-    this.increaseCount = this.increaseCount.bind(this)
-    this.decreaseCount = this.decreaseCount.bind(this)
+  useEffect(() => {
+    console.log('products.js => shoppingCardProducts did update');
+    
+    const newSum = shoppingCardProducts.reduce(
+        (previousValue, currentValue) => {
+            return previousValue + currentValue.count * currentValue.price;
+        }
+    , 0);
 
-  }
+    setSum(newSum)
 
-  changeSelectHandler(event) {
+  } , [shoppingCardProducts])
+
+  let changeSelectHandler = (event) => {
     if (event.nativeEvent.target.value === 'The-Cheapest') {
-        this.setState(prevState => {
-            return {productsData : prevState.productsData.sort((a, b) => a.price - b.price)}
+        setProductsData(prevState => {
+            return [...prevState.sort((a, b) => a.price - b.price)]
         })
     } else if (event.nativeEvent.target.value === 'The-Most-Expensive') {
-        this.setState(prevState => {
-            return {productsData : prevState.productsData.sort((a, b) => b.price - a.price)}
+        setProductsData(prevState => {
+            return [...prevState.sort((a, b) => b.price - a.price)]
         })
     } else if (event.nativeEvent.target.value === 'Most-Popular') {
-        this.setState(prevState => {
-            return {productsData : prevState.productsData.sort((a, b) => a.popularity - b.popularity)}
+        setProductsData(prevState => {
+            return [...prevState.sort((a, b) => a.popularity - b.popularity)]
         })
     } else if (event.nativeEvent.target.value === 'Best-Selling') {
-        this.setState(prevState => {
-            return {productsData : prevState.productsData.sort((a, b) => a.selling - b.selling)}
+        setProductsData(prevState => {
+            return [...prevState.sort((a, b) => a.selling - b.selling)]
         })
     } else {
-        this.setState(prevState => {
-            return {productsData : prevState.productsData.sort((a, b) => a.id - b.id)}
+        setProductsData(prevState => {
+            return [...prevState.sort((a, b) => a.id - b.id)]
         })
     }
   }
 
-  changeInputHandler(event) {
-    this.setState({
-        searchInput : event.nativeEvent.target.value
-    })
+  let changeInputHandler = (event) => {
+    setSearchInput(event.nativeEvent.target.value)
   }
 
-  searchHandler() {
-    let searchedProduct = this.state.searchInput
+  let searchHandler = () => {
+    let searchedProduct = searchInput
 
-    if(this.state.searchInput) {
-        let mainProduct = this.state.productsData.filter(productData => {
+    if(searchInput) {
+        let mainProduct = productsData.filter(productData => {
             return productData.title.toLowerCase().includes(searchedProduct.toLowerCase())
         })
 
-        this.setState(prevState => {
-            return {searchedProduct : mainProduct}
-        })
+        setSearchedProduct(mainProduct)
     } else {
         let mainProduct = []
-        this.setState(prevState => {
-            return {searchedProduct : mainProduct}
-        })
+        setSearchedProduct(mainProduct)
     }
   }
 
-  keyDownInputHandler(event) {
+  let keyDownInputHandler = (event) => {
     if(event.key === 'Enter') {
-        this.searchHandler()
+       searchHandler()
     }
   }
 
-   async addToCardHandler(productId) {
-    await this.state.productsData.forEach(product => {
+  let addToCardHandler = (productId) => {
+    productsData.forEach(product => {
         if (product.id === productId) {
 
-            let isInShoppingCard = this.state.shoppingCardProducts.some(item => {
+            let isInShoppingCard = shoppingCardProducts.some(item => {
                 return item.id === productId
             })
 
             if (!isInShoppingCard) {
-                this.setState(prevState => {
-                    return {shoppingCardProducts : [...prevState.shoppingCardProducts , product]}
+                setShoppingCardProducts(prevState => {
+                    return [...prevState , product]
                 }
               )
             }
         }
     })
-
-    this.setState({
-        sum : 0
-    })
-
-    this.state.shoppingCardProducts.forEach(shoppingCardProduct => {
-        let newSum = this.state.sum + (shoppingCardProduct.count * shoppingCardProduct.price)
-        this.setState({
-            sum : newSum
-        })
-    })
   }
 
-  async removeProductHandler(productId) {
-    let mainProduct = this.state.shoppingCardProducts.filter(shoppingCardProduct => {
+  let removeProductHandler = (productId) => {
+    let mainProducts = shoppingCardProducts.filter(shoppingCardProduct => {
         return shoppingCardProduct.id !== productId
     })
 
-    await this.setState(prevState => {
-        return {shoppingCardProducts : mainProduct}
-    })
-
-    this.setState({
-        sum : 0
-    })
-
-    this.state.shoppingCardProducts.forEach(shoppingCardProduct => {
-        let newSum = this.state.sum + (shoppingCardProduct.count * shoppingCardProduct.price)
-        this.setState({
-            sum : newSum
-        })
-    })
+    setShoppingCardProducts(mainProducts)
   }
 
-  async increaseCount(id) {
-    this.state.shoppingCardProducts.forEach(shoppingCardProduct => {
-        if (shoppingCardProduct.id === id) {
-            shoppingCardProduct.count++
-        }
+  let increaseCount = (id) => {
+
+    let productIndex = shoppingCardProducts.findIndex(shoppingCardProduct => {
+        return shoppingCardProduct.id === id
     })
 
-    let newShoppingCard = this.state.shoppingCardProducts
+    const shoppingCardProductsCopy = [...shoppingCardProducts];
+    
+    ++shoppingCardProductsCopy[productIndex].count
 
-    await this.setState({
-        shoppingCardProducts : newShoppingCard
-    })
-
-    this.setState({
-        sum : 0
-    })
-
-    this.state.shoppingCardProducts.forEach(shoppingCardProduct => {
-        let newSum = this.state.sum + (shoppingCardProduct.count * shoppingCardProduct.price)
-        this.setState({
-            sum : newSum
-        })
-    })
+    setShoppingCardProducts(shoppingCardProductsCopy)
 
   }
 
-  async decreaseCount(id) {
-    this.state.shoppingCardProducts.forEach(shoppingCardProduct => {
-        if (shoppingCardProduct.id === id) {
-            if(shoppingCardProduct.count > 1) {
-                shoppingCardProduct.count--
-            }
-        }
+  let decreaseCount = (id) => {
+    let productIndex = shoppingCardProducts.findIndex(shoppingCardProduct => {
+        return shoppingCardProduct.id === id
     })
 
-    let newShoppingCard = this.state.shoppingCardProducts
+    const shoppingCardProductsCopy = [...shoppingCardProducts];
+    
+    if (shoppingCardProductsCopy[productIndex].count > 1) {
+        --shoppingCardProductsCopy[productIndex].count
+    }
 
-    await this.setState({
-        shoppingCardProducts : newShoppingCard
-    })
-
-    this.setState({
-        sum : 0
-    })
-
-    this.state.shoppingCardProducts.forEach(shoppingCardProduct => {
-        let newSum = this.state.sum + (shoppingCardProduct.count * shoppingCardProduct.price)
-        this.setState({
-            sum : newSum
-        })
-    })
+    setShoppingCardProducts(shoppingCardProductsCopy)
   }
 
-  render() {
-    return (
-      <div className='Products-wrapper'>
-        <div className='Products-selecting-wrapper'>
-            <select onChange={(event) => this.changeSelectHandler(event)}>
-                <option value="">Sort By ...</option>
-                <option value="Most-Popular">Most Popular</option>
-                <option value="Best-Selling">Best Selling</option>
-                <option value="The-Cheapest">The Cheapest</option>
-                <option value="The-Most-Expensive">The Most Expensive</option>
-            </select>
-            <div className='Products-search-input-wrapper'>
-                <input type="text" placeholder='Search Here' value={this.state.searchInput} onChange={(event) => this.changeInputHandler(event)}
-                onKeyDown={(event) => this.keyDownInputHandler(event)}/>
-                <CiSearch className='Products-search-icon' onClick={this.searchHandler}/>
-            </div>
-        </div>
-        <div className='Products-cards-wrapper Products-cards-wrapper-col-max-500 Products-cards-wrapper-col-min-500
-        Products-cards-wrapper-col-min-768 Products-cards-wrapper-col-min-1280'>
-            {this.state.searchedProduct.length === 0 ? 
-            this.state.productsData.map(productData => (
-                <ProductCard key={productData.id} {...productData} onClick={this.addToCardHandler}/>
-            )) : 
-            this.state.searchedProduct.map(productData => (
-                <ProductCard key={productData.id} {...productData} onClick={this.addToCardHandler}/>
-            ))
-            }
-        </div>
-        <div className='Shopping-card-wrapper'>
-            <div className='Shopping-card-title'>Shopping Card</div>
-            {this.state.shoppingCardProducts.map(product => (
-                <ShoppingCardProduct key={product.id} {...product} onDecrease={this.decreaseCount} onIncrease={this.increaseCount} onRemove={this.removeProductHandler}/>
-            ))}
-        </div>
-        <div className='Shopping-card-total-price'>
-            Total Price : {this.state.sum}$
-        </div>
+  return (
+    <div className='Products-wrapper'>
+      <div className='Products-selecting-wrapper'>
+          <select onChange={(event) => changeSelectHandler(event)}>
+              <option value="">Sort By ...</option>
+              <option value="Most-Popular">Most Popular</option>
+              <option value="Best-Selling">Best Selling</option>
+              <option value="The-Cheapest">The Cheapest</option>
+              <option value="The-Most-Expensive">The Most Expensive</option>
+          </select>
+          <div className='Products-search-input-wrapper'>
+              <input type="text" placeholder='Search Here' value={searchInput} onChange={(event) => changeInputHandler(event)}
+              onKeyDown={(event) => keyDownInputHandler(event)}/>
+              <CiSearch className='Products-search-icon' onClick={searchHandler}/>
+          </div>
       </div>
-    )
-  }
+      <div className='Products-cards-wrapper Products-cards-wrapper-col-max-500 Products-cards-wrapper-col-min-500
+      Products-cards-wrapper-col-min-768 Products-cards-wrapper-col-min-1280'>
+          {searchedProduct.length === 0 ? 
+          productsData.map(productData => (
+              <ProductCard key={productData.id} {...productData} onClick={addToCardHandler}/>
+          )) : 
+          searchedProduct.map(productData => (
+              <ProductCard key={productData.id} {...productData} onClick={addToCardHandler}/>
+          ))
+          }
+      </div>
+      <div className='Shopping-card-wrapper'>
+          <div className='Shopping-card-title'>Shopping Card</div>
+          {shoppingCardProducts.map(product => (
+              <ShoppingCardProduct key={product.id} {...product} onDecrease={decreaseCount} onIncrease={increaseCount} onRemove={removeProductHandler}/>
+          ))}
+      </div>
+      <div className='Shopping-card-total-price'>
+          Total Price : {sum}$
+      </div>
+    </div>
+  )
 }
